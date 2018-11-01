@@ -20,21 +20,50 @@ library(prettyR)
 
 smp <- read.csv2("./smp1.csv")
 
+smp2 <- read.csv2("./smp2.csv")
+
 ```
 
-## See statistics
-```{r load_data}
+## See statistics for smp
+```{r summary_data}
 
 summary(smp)
+
+describe(smp)
+
+describe(smp, num.desc = c("mean", "median", "sd", "min", "max", "valid.n"))
+
 ```
+
+
+## See statistics for smp2
+```{r summary_data2}
+
+summary(smp2)
+
+describe(smp2)
+
+describe(smp2, num.desc = c("mean", "median", "sd", "min", "max", "valid.n"))
+
+```
+
 
 ## draw charts
 
 
 
-```{r draw_charts, echo=FALSE}
+```{r draw_charts, echo=TRUE}
+
+ggplot(smp, aes(x= rs, y= age, group = rs)) + geom_boxplot(outlier.colour = "red")
+
+ggplot(smp, aes(prof, fill = prof)) + geom_bar()
+
+ggplot(as.data.frame(round(prop.table(table(smp$prof))*100,2)), aes(x = Var1, y = Freq, fill = Var1)) + geom_bar(width = .5, stat = "identity")
 
 ggplot(as.data.frame(table(smp$prof)), aes(x = "", y = Freq, fill = Var1)) + geom_bar(width = .5, stat = "identity", position = position_stack()) + coord_polar('y')
+
+ggplot(smp, aes(x= jitter(age), y = jitter(n.enfant), colour = age)) + geom_point()
+
 
 ```
 
