@@ -1,0 +1,41 @@
+---
+title: "Statistic wirh R by FUN  - Week 1"
+output: 
+  html_document:
+    keep_md: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(prettyR)
+```
+
+## Load data from csv file
+
+
+
+```{r load_data, cache=TRUE}
+
+smp <- read.csv2("./smp1.csv")
+
+```
+
+## See statistics
+```{r load_data}
+
+summary(smp)
+```
+
+## draw charts
+
+
+
+```{r draw_charts, echo=FALSE}
+
+ggplot(as.data.frame(table(smp$prof)), aes(x = "", y = Freq, fill = Var1)) + geom_bar(width = .5, stat = "identity", position = position_stack()) + coord_polar('y')
+
+```
+
+
