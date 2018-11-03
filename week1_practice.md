@@ -2,15 +2,94 @@
 title: "Statistic wirh R by FUN  - Week 1"
 output: 
   html_document:
-    keep_md: true
-
+    keep_md: yes
 ---
 
 
 
+## Example Chi-2 test 
+
+### With 100 people in each group
+
+
+```r
+p.Mal <- c(.7, .6)
+p.Gue <- c(.3, .4)
+p.matrix <- matrix(data = c(p.Gue*100, p.Mal*100), ncol = 2)
+p.matrix
+```
+
+```
+##      [,1] [,2]
+## [1,]   30   70
+## [2,]   40   60
+```
+
+```r
+chisq.test(x= p.matrix,correct = FALSE)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  p.matrix
+## X-squared = 2.1978, df = 1, p-value = 0.1382
+```
+### With 200 individuals in each group
+
+```r
+p.matrix <- matrix(data = c(p.Gue*200, p.Mal*200), ncol = 2)
+p.matrix
+```
+
+```
+##      [,1] [,2]
+## [1,]   60  140
+## [2,]   80  120
+```
+
+```r
+chisq.test(x= p.matrix,correct = FALSE)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  p.matrix
+## X-squared = 4.3956, df = 1, p-value = 0.03603
+```
+
+
+### With 1000 individuals in each group
+
+```r
+p.matrix <- matrix(data = c(p.Gue*1000, p.Mal*1000), ncol = 2)
+p.matrix
+```
+
+```
+##      [,1] [,2]
+## [1,]  300  700
+## [2,]  400  600
+```
+
+```r
+chisq.test(x= p.matrix,correct = FALSE)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  p.matrix
+## X-squared = 21.978, df = 1, p-value = 2.758e-06
+```
+
+
+
 ## Load data from csv file
-
-
 
 
 ```r
@@ -327,5 +406,54 @@ ggplot(smp, aes(x= jitter(age), y = jitter(n.enfant), colour = age)) + geom_poin
 ```
 
 ![](week1_practice_files/figure-html/draw_charts-5.png)<!-- -->
+
+
+## Mean comparaison
+
+### define new variables
+
+```r
+smp$ed.b <- smp$ed > 2
+smp$ed.b <- ifelse(smp$ed > 2, 1, 0)
+table(smp$ed.b, useNA = "always")
+```
+
+```
+## 
+##    0    1 <NA> 
+##  470  222  107
+```
+
+### compute variance/standard for each group
+
+```r
+smp %>%
+  group_by(ed.b) %>%
+  summarize(age_sd = sd(age,na.rm = TRUE))
+```
+
+```
+## # A tibble: 3 x 2
+##    ed.b age_sd
+##   <dbl>  <dbl>
+## 1     0   13.4
+## 2     1   13.3
+## 3    NA   12.7
+```
+
+### plot the age histogram
+
+```r
+smp %>%
+  ggplot(aes(x=age, color = "red")) +
+  geom_histogram(binwidth = 5)
+```
+
+```
+## Warning: Removed 2 rows containing non-finite values (stat_bin).
+```
+
+![](week1_practice_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
 
 

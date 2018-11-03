@@ -2,8 +2,7 @@
 title: "Statistic wirh R by FUN  - Week 1"
 output: 
   html_document:
-    keep_md: true
-
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -12,9 +11,37 @@ library(tidyverse)
 library(prettyR)
 ```
 
+## Example Chi-2 test 
+
+### With 100 people in each group
+
+```{r}
+p.Mal <- c(.7, .6)
+p.Gue <- c(.3, .4)
+p.matrix <- matrix(data = c(p.Gue*100, p.Mal*100), ncol = 2)
+p.matrix
+chisq.test(x= p.matrix,correct = FALSE)
+
+
+```
+### With 200 individuals in each group
+```{r}
+p.matrix <- matrix(data = c(p.Gue*200, p.Mal*200), ncol = 2)
+p.matrix
+chisq.test(x= p.matrix,correct = FALSE)
+```
+
+
+### With 1000 individuals in each group
+```{r}
+p.matrix <- matrix(data = c(p.Gue*1000, p.Mal*1000), ncol = 2)
+p.matrix
+chisq.test(x= p.matrix,correct = FALSE)
+```
+
+
+
 ## Load data from csv file
-
-
 
 ```{r load_data, cache=TRUE}
 
@@ -66,5 +93,32 @@ ggplot(smp, aes(x= jitter(age), y = jitter(n.enfant), colour = age)) + geom_poin
 
 
 ```
+
+
+## Mean comparaison
+
+### define new variables
+```{r}
+smp$ed.b <- smp$ed > 2
+smp$ed.b <- ifelse(smp$ed > 2, 1, 0)
+table(smp$ed.b, useNA = "always")
+
+
+```
+
+### compute variance/standard for each group
+```{r}
+smp %>%
+  group_by(ed.b) %>%
+  summarize(age_sd = sd(age,na.rm = TRUE))
+```
+
+### plot the age histogram
+```{r}
+smp %>%
+  ggplot(aes(x=age, color = "red")) +
+  geom_histogram(binwidth = 5)
+```
+
 
 
