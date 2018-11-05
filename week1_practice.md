@@ -455,5 +455,168 @@ smp %>%
 
 ![](week1_practice_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
+### Display the student test statistics
+
+
+```r
+t.test(smp$age~smp$ed.b,var.equal = TRUE)
+```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  smp$age by smp$ed.b
+## t = 1.7142, df = 690, p-value = 0.08694
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2710524  4.0005138
+## sample estimates:
+## mean in group 0 mean in group 1 
+##        39.46383        37.59910
+```
+
+## Exercices JH
+
+### P value computation
+
+```r
+subject <- rep(1:5,2)
+
+group <- rep(c("b", "w2"), each= 5)
+
+measure <- c(140, 138, 150, 148, 135, 132, 135, 151, 146, 130)
+
+df <- data.frame("subject" = subject, "group"= group, "measure" = measure)
+df
+```
+
+```
+##    subject group measure
+## 1        1     b     140
+## 2        2     b     138
+## 3        3     b     150
+## 4        4     b     148
+## 5        5     b     135
+## 6        1    w2     132
+## 7        2    w2     135
+## 8        3    w2     151
+## 9        4    w2     146
+## 10       5    w2     130
+```
+
+```r
+g1 <-df %>% 
+  filter(group == "b") %>%
+  select(measure)
+
+g2 <-df %>% 
+  filter(group == "w2") %>%
+  select(measure)
+
+difference <- g2 - g1
+mn <- mean(difference$measure)
+s <- sd(difference$measure)
+n <- 6
+
+t.test(difference$measure)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  difference$measure
+## t = -2.2616, df = 4, p-value = 0.08652
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  -7.5739122  0.7739122
+## sample estimates:
+## mean of x 
+##      -3.4
+```
+
+###  P value for T statistic
+
+
+
+```r
+n1 <- n2 <- 9
+x1 <- -3 ##treated
+x2 <- 1 ##placebo
+s1 <- 1.5 ##treated
+s2 <- 1.8 ##placebo
+s <- sqrt(((n1 - 1) * s1^2 + (n2 - 1) * s2^2)/(n1 + n2 - 2))
+s
+```
+
+```
+## [1] 1.656804
+```
+
+```r
+ts <- (x1 - x2)/(s * sqrt(1/n1 + 1/n2))
+ts
+```
+
+```
+## [1] -5.121475
+```
+
+```r
+2 * pt(ts, n1 + n2 - 2)
+```
+
+```
+## [1] 0.0001025174
+```
+
+```r
+2*(1 - pt(ts, n1 + n2 - 2, lower.tail = FALSE))
+```
+
+```
+## [1] 0.0001025174
+```
+
+
+### Power computation 
+
+
+```r
+power.t.test(n = 100, delta = .01, sd = .04, 
+             alternative = "one.sided", type = "one.sample",
+             sig.level = .05)
+```
+
+```
+## 
+##      One-sample t test power calculation 
+## 
+##               n = 100
+##           delta = 0.01
+##              sd = 0.04
+##       sig.level = 0.05
+##           power = 0.7989855
+##     alternative = one.sided
+```
+
+```r
+power.t.test(power = .9, delta = .01,  type = "one.sample",
+             sd = .04, alternative = "one.sided", 
+             sig.level = .05)
+```
+
+```
+## 
+##      One-sample t test power calculation 
+## 
+##               n = 138.3856
+##           delta = 0.01
+##              sd = 0.04
+##       sig.level = 0.05
+##           power = 0.9
+##     alternative = one.sided
+```
 
 
